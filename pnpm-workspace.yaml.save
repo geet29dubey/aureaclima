@@ -1,0 +1,9 @@
+allowBuilds:
+  unrs-resolver: true
+  sharp: true
+  esbuild: true
+  workerd: true
+minimumReleaseAgeExclude:
+  - '@cloudflare/workers-response-store@0.1.0-beta.0'
+X
+

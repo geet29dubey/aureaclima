@@ -1,0 +1,6 @@
+import type { Dictionary, Locale } from "@/i18n/dictionaries";
+import { Brand, Icon } from "./icon";
+import { JourneyLink, LanguageSelector, MobileMenu } from "./navigation";
+export function Header({ locale, d }: { locale: Locale; d: Dictionary }) {
+  return <><a className="skip-link" href="#main">{d.nav.skip}</a><div className="demo-banner"><div className="container banner-inner"><span><span className="demo-pill">DEMO</span>{d.banner}</span><JourneyLink locale={locale} destination="sales" placement="banner">{d.bannerCta}<Icon name="external" size={15}/></JourneyLink></div></div><header className="site-header"><div className="container header-inner"><a href={`/${locale}`} aria-label="Áurea Clima"><Brand/></a><nav className="desktop-nav" aria-label={d.nav.menu}><a href={`/${locale}`} className="nav-home">{d.nav.home}</a><a href={`/${locale}#services`}>{d.nav.services}</a><a href={`/${locale}#how-it-works`}>{d.nav.how}</a><a href={`/${locale}#faq`}>{d.nav.faq}</a></nav><div className="header-actions"><div className="desktop-language"><LanguageSelector locale={locale} label={d.nav.language}/></div><a className="button button-gold header-cta" href={`/${locale}#services`}>{d.nav.cta}<Icon name="arrow" size={17}/></a><MobileMenu locale={locale} d={d.nav}/></div></div></header></>;
+}
