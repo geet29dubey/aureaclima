@@ -27,7 +27,7 @@ await Promise.all(paths.map(async path=>{
     if(href.startsWith("/")) {
       const url=new URL(href,base); links.add(url.pathname);
       if(url.hash && url.pathname === path) assert.ok(html.includes(`id="${url.hash.slice(1)}"`),`anchor: ${href}`);
-    } else assert.ok(href.startsWith("https://clima.rooklyn.co/") || href === "https://rooklyn.co" || href === "https://clima.rooklyn.com/#contact",`central external URL: ${href}`);
+    } else assert.ok(href.startsWith("https://clima.rooklyn.co/") || href === "https://rooklyn.co" || href === "https://clima.rooklyn.co/#contact",`central external URL: ${href}`);
   }
 }));
 await Promise.all([...links].map(async path=>assert.equal((await fetch(`${base}${path}`)).status,200,`link: ${path}`)));

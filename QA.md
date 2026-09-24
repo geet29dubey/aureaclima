@@ -2,7 +2,7 @@
 
 ## Contact, language selector and chat update — 20 September 2026
 
-- Removed the contact assessment iframe. Added the translated “Build this for my business” CTA to `https://clima.rooklyn.com/#contact`; retained Explore Rooklyn without its arrow. The requested domain returns a TLS error, so its contact anchor remains unverified.
+- Removed the contact assessment iframe. Added the translated “Build this for my business” CTA to `https://clima.rooklyn.co/#contact`; retained Explore Rooklyn without its arrow. The requested domain returns a TLS error, so its contact anchor remains unverified.
 - Expanded desktop section widths and increased headings, supporting copy and CTA sizes. Checked 1920px desktop, 768px tablet and 390px phone layouts without horizontal overflow; contact CTAs stack on phones.
 - Verified language hover, click, keyboard expansion/Escape and mobile selection. English, Italian and Spanish navigation retain the current fragment and language query parameter.
 - Connected supplied chat widget `6ab00f882251fa79529e1b8c` through the existing optional-assistant consent. Verified the widget renders after consent, remains a single contained widget after language switching, and disappears on withdrawal. Delayed mounting avoids duplicate loads during React development effect replay; detached mounts prevent in-flight loaders from attaching to the document body.

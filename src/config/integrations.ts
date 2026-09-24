@@ -11,7 +11,7 @@ export function validUrl(value: string | undefined): string | null {
 }
 export const integrations = {
   contact: "https://rooklyn.co",
-  businessContact: "https://clima.rooklyn.com/#contact",
+  businessContact: "https://clima.rooklyn.co/#contact",
   siteUrl: validUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? "https://aureaclima.rooklyn.co",
   sales: validUrl(process.env.NEXT_PUBLIC_ROOKLYN_SALES_URL) ?? "https://clima.rooklyn.co",
   consultation: validUrl(process.env.NEXT_PUBLIC_ROOKLYN_CONSULTATION_URL),

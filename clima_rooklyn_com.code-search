@@ -1,0 +1,24 @@
+# Query: clima.rooklyn.com
+# ContextLines: 1
+
+4 results - 4 files
+
+QA.md:
+  4  
+  5: - Removed the contact assessment iframe. Added the translated “Build this for my business” CTA to `https://clima.rooklyn.com/#contact`; retained Explore Rooklyn without its arrow. The requested domain returns a TLS error, so its contact anchor remains unverified.
+  6  - Expanded desktop section widths and increased headings, supporting copy and CTA sizes. Checked 1920px desktop, 768px tablet and 390px phone layouts without horizontal overflow; contact CTAs stack on phones.
+
+README.md:
+  57  
+  58: All six owner-supplied GHL forms are mapped in `src/config/ghl-forms.ts`. Only the selected form is mounted, with the supplied consent attributes and the official `form_embed.js` script. The contact section has no assessment form: “Build this for my business” opens `https://clima.rooklyn.com/#contact`, and “Explore Rooklyn” opens `https://rooklyn.co`, with both labels translated by locale. The requested `.com` domain returned a TLS error during verification; its contact anchor still needs external confirmation. Service form fields, validation, legal links and post-submit workflows remain managed inside GHL. Legacy repair/installation URL environment variables no longer control these CTAs.
+  59  
+
+scripts\verify-routes.mjs:
+  29        if(url.hash && url.pathname === path) assert.ok(html.includes(`id="${url.hash.slice(1)}"`),`anchor: ${href}`);
+  30:     } else assert.ok(href.startsWith("https://clima.rooklyn.co/") || href === "https://rooklyn.co" || href === "https://clima.rooklyn.com/#contact",`central external URL: ${href}`);
+  31    }
+
+src\config\integrations.ts:
+  13    contact: "https://rooklyn.co",
+  14:   businessContact: "https://clima.rooklyn.co/#contact",
+  15    siteUrl: validUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? "https://aureaclima.rooklyn.co",
