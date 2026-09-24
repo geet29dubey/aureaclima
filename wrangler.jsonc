@@ -15,8 +15,5 @@
     "binding": "IMAGES"
   },
   "version_metadata": {"binding":"CF_VERSION_METADATA"},
-  "cache": {"enabled":true},
-  "services": [{"binding":"RESPONSE_STORE","service":"aureaclima-response-store","entrypoint":"ResponseStoreService"}]
-/* ,
-  "kv_namespaces": [{ "binding": "VINEXT_KV_CACHE", "id": "<your-kv-namespace-id>" }] */
+  "cache": {"enabled":true}
 }
