@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{locale:str
  const {locale,journey}=await params;
  if (!isLocale(locale)) return {};
  const d=dictionaries[locale];
- return { title:`${d.unavailable.title} · Áurea Clima`, alternates: {canonical:`/${locale}/journey/${journey}`, languages: {"es-ES":`/es/journey/${journey}`,en:`/en/journey/${journey}`,"it-IT":`/it/journey/${journey}`,"x-default":`/es/journey/${journey}`}}, openGraph:{title:`Áurea Clima · ${d.footer.demo}`,description:d.notice,url:`/${locale}/journey/${journey}`,siteName:"Áurea Clima",type:"website"} };
+ return { title:`${d.unavailable.title} · Áurea Clima`, alternates: {canonical:`/${locale}/journey/${journey}`, languages: {"es-ES":`/es/journey/${journey}`,en:`/en/journey/${journey}`,"it-IT":`/it/journey/${journey}`,"x-default":`/en/journey/${journey}`}}, openGraph:{title:`Áurea Clima · ${d.footer.demo}`,description:d.notice,url:`/${locale}/journey/${journey}`,siteName:"Áurea Clima",type:"website"} };
 }
 export default async function Journey({ params }: { params: Promise<{locale:string;journey:string}> }) {
   const {locale,journey}=await params;

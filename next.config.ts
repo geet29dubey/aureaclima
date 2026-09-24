@@ -2,8 +2,9 @@ import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
   async redirects() { return [
-    { source: "/", has: [{ type: "cookie", key: "aureaclima_language", value: "(?<language>en|it)" }], destination: "/:language", permanent: false },
-    { source: "/", destination: "/es", permanent: false }
+    { source: "/:locale(es|en|it)/journey/:service(repair|installation)", destination: "/:locale?demo_journey=:service#services", permanent: false },
+    { source: "/", has: [{ type: "cookie", key: "aureaclima_language", value: "(?<language>es|it)" }], destination: "/:language", permanent: false },
+    { source: "/", destination: "/en", permanent: false }
   ]; },
   async headers() { return [{ source: "/:path*", headers: [
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },

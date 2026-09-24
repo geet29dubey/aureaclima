@@ -10,6 +10,8 @@ export function validUrl(value: string | undefined): string | null {
   } catch { return null; }
 }
 export const integrations = {
+  contact: "https://rooklyn.co",
+  businessContact: "https://clima.rooklyn.com/#contact",
   siteUrl: validUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? "https://aureaclima.rooklyn.co",
   sales: validUrl(process.env.NEXT_PUBLIC_ROOKLYN_SALES_URL) ?? "https://clima.rooklyn.co",
   consultation: validUrl(process.env.NEXT_PUBLIC_ROOKLYN_CONSULTATION_URL),
@@ -17,7 +19,7 @@ export const integrations = {
   installation: { es: validUrl(process.env.NEXT_PUBLIC_GHL_INSTALLATION_URL_ES), en: validUrl(process.env.NEXT_PUBLIC_GHL_INSTALLATION_URL_EN), it: validUrl(process.env.NEXT_PUBLIC_GHL_INSTALLATION_URL_IT) },
   maintenance: validUrl(process.env.NEXT_PUBLIC_GHL_MAINTENANCE_URL),
   trackingEnabled: process.env.NEXT_PUBLIC_GHL_TRACKING_ENABLED === "true",
-  chatEnabled: process.env.NEXT_PUBLIC_GHL_CHAT_ENABLED === "true",
+  chatEnabled: process.env.NEXT_PUBLIC_GHL_CHAT_ENABLED !== "false",
   privacy: validUrl(process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL),
   cookies: validUrl(process.env.NEXT_PUBLIC_COOKIE_POLICY_URL),
   legal: validUrl(process.env.NEXT_PUBLIC_LEGAL_NOTICE_URL),
@@ -27,7 +29,9 @@ export type Journey = "repair" | "installation" | "maintenance";
 export type Destination = Journey | "sales" | "consultation";
 export function resolveLocalizedUrl(urls: Record<Locale, string | null>, locale: Locale) { return urls[locale] ?? urls.es; }
 export function destinationUrl(destination: Destination, locale: Locale): string {
-  const url = destination === "repair" || destination === "installation" ? resolveLocalizedUrl(integrations[destination], locale) : integrations[destination];
+  // Repair and installation now open the owner's embedded forms in Services.
+  if (destination === "repair" || destination === "installation") return `/${locale}?demo_journey=${destination}#services`;
+  const url = integrations[destination];
   return url ?? `/${locale}/journey/${destination}`;
 }
 export function policyUrl(policy: "privacy" | "cookies" | "legal", locale: Locale) { return integrations[policy] ?? `/${locale}/legal/${policy}`; }

@@ -1,6 +1,9 @@
 export type Consent = { analytics: boolean; functional: boolean };
 export const CONSENT_KEY = "aureaclima_consent_v1";
 export const LANGUAGE_KEY = "aureaclima_language";
+export function saveLanguage(locale: string) {
+  document.cookie = `${LANGUAGE_KEY}=${locale}; Path=/; Max-Age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
+}
 let memory: string | null = null;
 export function consentSnapshot(): string | null { try { return localStorage.getItem(CONSENT_KEY) ?? memory; } catch { return memory; } }
 export function parseConsent(value: string | null): Consent | null {

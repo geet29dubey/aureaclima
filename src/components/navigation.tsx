@@ -1,30 +1,59 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { languageNames, locales, type Dictionary, type Locale } from "@/i18n/dictionaries";
-import { attributedUrl, destinationUrl, type Destination } from "@/config/integrations";
-import { track, type AnalyticsEvent } from "@/lib/analytics";
-import { LANGUAGE_KEY } from "@/lib/consent";
+import { track } from "@/lib/analytics";
+import { saveLanguage } from "@/lib/consent";
+import { bookingService, localizedPathname } from "@/config/booking";
 import { Icon } from "./icon";
-const events: Record<Destination, AnalyticsEvent> = { repair: "aureaclima_repair_clicked", installation: "aureaclima_installation_clicked", maintenance: "aureaclima_maintenance_clicked", sales: "aureaclima_rooklyn_sales_clicked", consultation: "aureaclima_consultation_clicked" };
-export function JourneyLink({ destination, locale, children, className = "", placement = "page" }: { destination: Destination; locale: Locale; children: React.ReactNode; className?: string; placement?: string }) {
-  const href = attributedUrl(destinationUrl(destination, locale), locale, destination);
-  return <a href={href} className={className} data-destination={destination} onClick={(event) => {
-    const url = attributedUrl(destinationUrl(destination, locale), locale, destination, window.location.search);
-    event.currentTarget.href = url;
-    track(events[destination], { locale, placement });
-  }}>{children}</a>;
-}
+import { ServicesDropdown } from "./services-dropdown";
+export { JourneyLink } from "./journey-link";
 export function LanguageSelector({ locale, label }: { locale: Locale; label: string }) {
   const pathname = usePathname();
   const router = useRouter();
-  return <label className="language-select"><Icon name="globe" size={17}/><span className="sr-only">{label}</span><select aria-label={label} value={locale} onChange={(event) => {
-    const nextLocale = event.target.value as Locale;
+  const [open, setOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const visible = open || hovered;
+  const root = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const id = useId();
+  useEffect(() => {
+    if (!visible) return;
+    const close = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) { setOpen(false); setHovered(false); }
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, [visible]);
+  const changeLanguage = (nextLocale: Locale) => {
+    setOpen(false);
+    setHovered(false);
+    if (nextLocale === locale) return;
     track("aureaclima_language_changed", { locale, nextLocale });
-    document.cookie = `${LANGUAGE_KEY}=${nextLocale}; Path=/; Max-Age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
-    const target = pathname.replace(/^\/(es|en|it)(?=\/|$)/, `/${nextLocale}`);
-    router.push(`${target}${window.location.search}${window.location.hash}`);
-  }}>{locales.map(value => <option key={value} value={value}>{languageNames[value]}</option>)}</select><Icon name="chevron" size={13}/></label>;
+    saveLanguage(nextLocale);
+    const target = localizedPathname(pathname, locale, nextLocale);
+    const query = new URLSearchParams(window.location.search);
+    query.set("lang", nextLocale);
+    const destination = `${target}${query.size ? `?${query}` : ""}${window.location.hash}`;
+    // GHL owns its iframe lifecycle and initializes against the current document.
+    // A fresh document keeps calendar loading/resizing reliable across locales.
+    const parts = pathname.replace(/\/$/, "").split("/");
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- GHL needs fresh document initialization on booking locale changes.
+    if (parts.length === 3 && bookingService(locale, parts[2])) window.location.assign(destination);
+    else router.push(destination);
+  };
+  return <div ref={root} className="language-select"
+    onPointerEnter={event => { if (event.pointerType === "mouse") setHovered(true); }}
+    onPointerLeave={() => { setHovered(false); }}
+    onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) { setOpen(false); setHovered(false); } }}
+    onKeyDown={event => { if (event.key === "Escape") { event.stopPropagation(); setOpen(false); setHovered(false); trigger.current?.focus(); } }}>
+    <button ref={trigger} type="button" className="language-toggle" aria-label={`${label}: ${languageNames[locale]}`} aria-expanded={visible} aria-controls={id} onClick={() => { setHovered(false); setOpen(value => !value); }}>
+      <Icon name="globe" size={17}/><span>{languageNames[locale]}</span><Icon name="chevron" size={13}/>
+    </button>
+    <div id={id} className="language-options" hidden={!visible}>
+      {locales.map(value => <button key={value} type="button" lang={value} aria-current={value === locale ? "true" : undefined} onClick={() => changeLanguage(value)}>{languageNames[value]}{value === locale && <Icon name="check" size={15}/>}</button>)}
+    </div>
+  </div>;
 }
 /** Carry campaign parameters across local navigation without local/session storage. */
 export function AttributionNavigation() {
@@ -45,5 +74,5 @@ export function AttributionNavigation() {
 }
 export function MobileMenu({ locale, d }: { locale: Locale; d: Dictionary["nav"] }) {
   const [open, setOpen] = useState(false);
-  return <div className="mobile-menu" onKeyDown={e => { if (e.key === "Escape") { setOpen(false); document.getElementById("menu-toggle")?.focus(); } }}><button id="menu-toggle" type="button" className="icon-button" aria-expanded={open} aria-controls="mobile-navigation" aria-label={open ? d.close : d.menu} onClick={() => setOpen(!open)}><Icon name={open ? "close" : "menu"}/></button>{open && <nav id="mobile-navigation" aria-label={d.menu}><a href={`/${locale}`} onClick={() => setOpen(false)}>{d.home}</a><a href={`/${locale}#services`} onClick={() => setOpen(false)}>{d.services}</a><a href={`/${locale}#how-it-works`} onClick={() => setOpen(false)}>{d.how}</a><a href={`/${locale}#faq`} onClick={() => setOpen(false)}>{d.faq}</a><LanguageSelector locale={locale} label={d.language}/><a className="button button-gold" href={`/${locale}#services`} onClick={() => setOpen(false)}>{d.cta}<Icon name="arrow" size={18}/></a></nav>}</div>;
+  return <div className="mobile-menu" onKeyDown={e => { if (e.key === "Escape") { setOpen(false); document.getElementById("menu-toggle")?.focus(); } }}><button id="menu-toggle" type="button" className="icon-button" aria-expanded={open} aria-controls="mobile-navigation" aria-label={open ? d.close : d.menu} onClick={() => setOpen(!open)}><Icon name={open ? "close" : "menu"}/></button>{open && <nav id="mobile-navigation" aria-label={d.menu}><a href={`/${locale}`} onClick={() => setOpen(false)}>{d.home}</a><ServicesDropdown locale={locale} label={d.services} onSelect={() => setOpen(false)}/><a href={`/${locale}#how-it-works`} onClick={() => setOpen(false)}>{d.how}</a><a href={`/${locale}#faq`} onClick={() => setOpen(false)}>{d.faq}</a><LanguageSelector locale={locale} label={d.language}/><a className="button button-gold" href={`/${locale}#services`} onClick={() => setOpen(false)}>{d.cta}<Icon name="arrow" size={18}/></a><a className="button button-outline" href={`/${locale}#contact-rooklyn`} onClick={() => setOpen(false)}>{d.contact}<Icon name="arrow" size={18}/></a></nav>}</div>;
 }

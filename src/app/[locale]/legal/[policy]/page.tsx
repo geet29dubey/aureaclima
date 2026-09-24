@@ -8,7 +8,7 @@ export async function generateMetadata({params}:{params:Promise<{locale:string;p
   const {locale,policy}=await params;
   if (!isLocale(locale) || !policies.includes(policy as typeof policies[number])) return {};
   const d=dictionaries[locale];
-  return {title:`${d.footer[policy as typeof policies[number]]} · Áurea Clima`,alternates:{canonical:`/${locale}/legal/${policy}`,languages:{"es-ES":`/es/legal/${policy}`,en:`/en/legal/${policy}`,"it-IT":`/it/legal/${policy}`,"x-default":`/es/legal/${policy}`}},openGraph:{title:`Áurea Clima · ${d.footer.demo}`,description:d.notice,url:`/${locale}/legal/${policy}`,siteName:"Áurea Clima",type:"website"}};
+  return {title:`${d.footer[policy as typeof policies[number]]} · Áurea Clima`,alternates:{canonical:`/${locale}/legal/${policy}`,languages:{"es-ES":`/es/legal/${policy}`,en:`/en/legal/${policy}`,"it-IT":`/it/legal/${policy}`,"x-default":`/en/legal/${policy}`}},openGraph:{title:`Áurea Clima · ${d.footer.demo}`,description:d.notice,url:`/${locale}/legal/${policy}`,siteName:"Áurea Clima",type:"website"}};
 }
 export default async function Legal({params}:{params:Promise<{locale:string;policy:string}>}) {
   const {locale,policy}=await params;

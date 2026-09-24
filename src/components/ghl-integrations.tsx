@@ -12,6 +12,9 @@ function useOfficialEmbed(config: OfficialEmbed | null, enabled: boolean, onRead
   useEffect(() => {
     if (!enabled || !config || !validUrl(config.scriptUrl) || !container.current) return;
     const root = container.current;
+    // Keep a parent for an in-flight loader even if a locale navigation unmounts
+    // it. GHL falls back to document.body when its script has no parent.
+    const mount = document.createElement("div");
     const script = document.createElement("script");
     script.src = config.scriptUrl;
     script.async = true;
@@ -20,10 +23,11 @@ function useOfficialEmbed(config: OfficialEmbed | null, enabled: boolean, onRead
     for (const [key,value] of Object.entries(config.attributes)) {
       if (key.startsWith("data-") || ["id", "crossorigin", "integrity", "referrerpolicy"].includes(key)) script.setAttribute(key,value);
     }
-    script.onload = () => { if (active) { try { dispose = config.setup(root); onReady?.(); } catch { registerAnalyticsAdapter(null); } } };
+    script.onload = () => { if (active) { try { dispose = config.setup(mount); onReady?.(); } catch { registerAnalyticsAdapter(null); } } };
     script.onerror = () => { /* The customer journey remains available. */ };
-    root.appendChild(script);
-    return () => { active=false; try { dispose?.(); } catch { /* Vendor cleanup cannot interrupt the page. */ } finally { script.remove(); root.replaceChildren(); } };
+    // Cancel React's development effect replay before requesting vendor code.
+    const pending = window.setTimeout(() => { root.appendChild(mount); mount.appendChild(script); }, 0);
+    return () => { active=false; window.clearTimeout(pending); try { dispose?.(); } catch { /* Vendor cleanup cannot interrupt the page. */ } finally { mount.remove(); } };
   },[config,enabled,onReady]);
   return container;
 }

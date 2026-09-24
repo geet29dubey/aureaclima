@@ -13,5 +13,14 @@ export type OfficialEmbed = {
 };
 export const officialGHL: { tracking: OfficialEmbed | null; chat: OfficialEmbed | null } = {
   tracking: null,
-  chat: null,
+  chat: {
+    scriptUrl: "https://widgets.leadconnectorhq.com/loader.js",
+    attributes: {
+      "data-resources-url": "https://widgets.leadconnectorhq.com/chat-widget/loader.js",
+      "data-widget-id": "6ab00f882251fa79529e1b8c",
+    },
+    // The official loader mounts its chat-widget inside the script's parent.
+    // The embed hook removes that parent content when consent is withdrawn.
+    setup: (container) => () => container.replaceChildren(),
+  },
 };

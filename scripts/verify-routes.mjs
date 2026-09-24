@@ -13,25 +13,30 @@ await Promise.all(paths.map(async path=>{
   assert.equal(response.headers.get("x-robots-tag"),"noindex, nofollow",path);
   const html=await response.text();
   const locale=path.split("/")[1];
+  const canonicalPath = /\/journey\/(repair|installation)$/.test(path) ? `/${locale}` : path;
   assert.ok(html.includes(`lang="${languages[locale]}"`),`lang: ${path}`);
   assert.ok(html.includes('content="noindex, nofollow"'),`robots: ${path}`);
-  assert.ok(html.includes(`rel="canonical" href="https://aureaclima.rooklyn.co${path}"`),`canonical: ${path}`);
+  assert.ok(html.includes(`rel="canonical" href="https://aureaclima.rooklyn.co${canonicalPath}"`),`canonical: ${path}`);
   assert.ok(!html.includes('application/ld+json'),`no misleading structured data: ${path}`);
-  assert.ok(!/src="https:\/\//.test(html),`no third-party scripts: ${path}`);
+  for (const match of html.matchAll(/<script\b[^>]*src="(https:[^"]+)"/g)) {
+    assert.equal(match[1], "https://link.msgsndr.com/js/form_embed.js", `only the official GHL embed script: ${path}`);
+  }
   for(const match of html.matchAll(/<a\b[^>]*href="([^"]+)"/g)) {
     const href=match[1].replaceAll("&amp;","&");
     if(href.startsWith("#")) { assert.ok(html.includes(`id="${href.slice(1)}"`),`anchor: ${href}`); continue; }
     if(href.startsWith("/")) {
       const url=new URL(href,base); links.add(url.pathname);
       if(url.hash && url.pathname === path) assert.ok(html.includes(`id="${url.hash.slice(1)}"`),`anchor: ${href}`);
-    } else assert.ok(href.startsWith("https://clima.rooklyn.co/"),`central external URL: ${href}`);
+    } else assert.ok(href.startsWith("https://clima.rooklyn.co/") || href === "https://rooklyn.co" || href === "https://clima.rooklyn.com/#contact",`central external URL: ${href}`);
   }
 }));
 await Promise.all([...links].map(async path=>assert.equal((await fetch(`${base}${path}`)).status,200,`link: ${path}`)));
 const root=await fetch(base,{redirect:"manual"});
-assert.equal(root.status,307); assert.equal(root.headers.get("location"),"/es");
+assert.equal(root.status,307); assert.equal(root.headers.get("location"),"/en");
 const remembered=await fetch(`${base}/?utm_source=test`,{redirect:"manual",headers:{Cookie:"aureaclima_language=it"}});
 assert.equal(remembered.status,307); assert.equal(remembered.headers.get("location"),"/it?utm_source=test");
+const rememberedSpanish=await fetch(base,{redirect:"manual",headers:{Cookie:"aureaclima_language=es"}});
+assert.equal(rememberedSpanish.status,307); assert.equal(rememberedSpanish.headers.get("location"),"/es");
 const invalid=await fetch(`${base}/en/missing-page`); assert.equal(invalid.status,404); assert.ok((await invalid.text()).includes("This page is not available."));
 const robots=await (await fetch(`${base}/robots.txt`)).text(); assert.ok(robots.includes("Disallow: /"));
 assert.equal((await fetch(`${base}/icon.svg`)).status,200);

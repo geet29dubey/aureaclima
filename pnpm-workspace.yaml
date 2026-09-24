@@ -5,3 +5,16 @@ allowBuilds:
   workerd: true
 minimumReleaseAgeExclude:
   - '@cloudflare/workers-response-store@0.1.0-beta.0'
+
+# Keep native optional dependencies available for both Windows and WSL.
+supportedArchitectures:
+  os:
+    - current
+    - win32
+    - linux
+  cpu:
+    - current
+    - x64
+  libc:
+    - current
+    - glibc
