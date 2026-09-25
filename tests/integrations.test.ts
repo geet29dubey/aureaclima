@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { attributedUrl, destinationUrl, validUrl, resolveLocalizedUrl } from "../src/config/integrations.ts";
+import { attributedUrl, destinationUrl, policyUrl, validUrl, resolveLocalizedUrl } from "../src/config/integrations.ts";
 import { ghlForms, ghlFormUrl } from "../src/config/ghl-forms.ts";
 import { selectedService } from "../src/lib/journey-selection.ts";
 import { serviceDictionaries } from "../src/i18n/service-dictionaries.ts";
@@ -11,6 +11,21 @@ import { bookingDictionaries } from "../src/i18n/booking-dictionaries.ts";
 import { thankYouDictionaries } from "../src/i18n/thank-you-dictionaries.ts";
 import { isBookingCompletion } from "../src/lib/booking-completion.ts";
 import { officialGHL } from "../src/config/official-ghl.ts";
+import { legalDocuments } from "../src/content/legal-documents.ts";
+
+test("footer policies have complete localized legal documents", () => {
+  const expectedSections = { privacy: 19, cookies: 15, legal: 12 };
+  for (const locale of locales) for (const policy of ["privacy", "cookies", "legal"] as const) {
+    const document = legalDocuments[locale][policy];
+    assert.equal(policyUrl(policy, locale), `/${locale}/legal/${policy}`);
+    assert.ok(document.title.trim());
+    assert.ok(document.updated.includes("2026"));
+    assert.equal(document.sections.length, expectedSections[policy]);
+  }
+  assert.equal(legalDocuments.es.privacy.sections[0].blocks[0].type, "table");
+  assert.equal(legalDocuments.en.cookies.sections[5].blocks[1].type, "table");
+  assert.equal(legalDocuments.it.legal.sections[11].title, "12. Modifiche");
+});
 
 test("GHL chat retains the supplied official loader configuration", () => {
   assert.equal(officialGHL.chat?.scriptUrl, "https://widgets.leadconnectorhq.com/loader.js");

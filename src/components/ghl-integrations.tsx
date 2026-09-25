@@ -44,7 +44,7 @@ export function GHLExternalTracking({ locale }: { locale: Locale }) {
   useEffect(() => { if (!active) { ready.current=false; registerAnalyticsAdapter(null); } },[active]);
   return <div ref={container} hidden data-integration="ghl-tracking"/>;
 }
-export function GHLChatWidget() {
+/* export function GHLChatWidget() {
   const consent = useConsent();
   const active = integrations.chatEnabled && consent?.functional === true;
   const chat = officialGHL.chat;
@@ -52,4 +52,113 @@ export function GHLChatWidget() {
   return <div className="ghl-widget-container" data-integration="ghl-chat">
     {active && chat && scriptUrl && <Script id="ghl-chat-widget-loader" src={scriptUrl} strategy="afterInteractive" {...chat.attributes}/>}
   </div>;
+}
+ */
+ 
+ export function GHLChatWidget() {
+  const loaded = useRef(false);
+
+  const active =
+    integrations.chatEnabled &&
+    Boolean(officialGHL.chat);
+
+  useEffect(() => {
+    if (!active || !officialGHL.chat) {
+      return;
+    }
+
+    // Prevent duplicate widget loaders during Next.js navigation.
+    if (loaded.current) {
+      return;
+    }
+
+    const config = officialGHL.chat;
+
+    /*
+     * GHL requires the widget mount element to exist
+     * BEFORE loader.js executes.
+     */
+    let widgetMount = document.querySelector<HTMLElement>(
+      `[data-chat-widget][data-widget-id="${config.widgetId}"]`
+    );
+
+    if (!widgetMount) {
+      widgetMount = document.createElement("div");
+
+      widgetMount.setAttribute("data-chat-widget", "");
+      widgetMount.setAttribute(
+        "data-widget-id",
+        config.widgetId
+      );
+      widgetMount.setAttribute(
+        "data-location-id",
+        config.locationId
+      );
+
+      document.body.appendChild(widgetMount);
+    }
+
+    /*
+     * Don't load loader.js more than once.
+     */
+    let script =
+      document.querySelector<HTMLScriptElement>(
+        `script[data-ghl-chat-loader="${config.widgetId}"]`
+      );
+
+    if (!script) {
+      script = document.createElement("script");
+
+      script.src = config.scriptUrl;
+      script.async = true;
+
+      script.setAttribute(
+        "data-resources-url",
+        config.resourcesUrl
+      );
+
+      script.setAttribute(
+        "data-widget-id",
+        config.widgetId
+      );
+
+      script.setAttribute(
+        "data-ghl-chat-loader",
+        config.widgetId
+      );
+
+      script.onload = () => {
+        console.info("[GHL Chat] loader loaded");
+      };
+
+      script.onerror = (error) => {
+        console.error(
+          "[GHL Chat] loader failed",
+          error
+        );
+      };
+
+      document.body.appendChild(script);
+    }
+
+    loaded.current = true;
+
+    /*
+     * Don't remove the GHL widget during ordinary locale /
+     * client-side navigation.
+     *
+     * GHL manages the widget globally.
+     */
+  }, [active]);
+
+  if (!active) {
+    return null;
+  }
+
+  return (
+    <div
+      data-integration="ghl-chat-controller"
+      style={{ display: "none" }}
+    />
+  );
 }

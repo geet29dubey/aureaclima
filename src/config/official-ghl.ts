@@ -6,6 +6,50 @@
  * with the official custom-event API and unregister it on cleanup.
  * Never place a private API key or access token here.
  */
+ 
+ 
+ /**
+ * Verified official GHL integration configuration.
+ *
+ * Never store private API keys or access tokens here.
+ */
+
+export type OfficialEmbed = {
+  scriptUrl: string;
+  attributes: Record<string, string>;
+  setup: (container: HTMLElement) => (() => void);
+};
+
+export type OfficialChatEmbed = {
+  scriptUrl: string;
+  resourcesUrl: string;
+  widgetId: string;
+  locationId: string;
+};
+
+export const officialGHL: {
+  tracking: OfficialEmbed | null;
+  chat: OfficialChatEmbed | null;
+} = {
+  tracking: null,
+
+  chat: {
+    scriptUrl: "https://widgets.leadconnectorhq.com/loader.js",
+
+    resourcesUrl:
+      "https://widgets.leadconnectorhq.com/chat-widget/loader.js",
+
+    widgetId: "6ab00f882251fa79529e1b8c",
+
+    // IMPORTANT:
+    // Replace this with the exact data-location-id supplied
+    // by GHL > Sites > Chat Widget > Get Code > Via GTM
+    locationId: "LBbKDQqDTzMCfsxZ52XI",
+  },
+};
+ 
+ 
+/*  
 export type OfficialEmbed = {
   scriptUrl: string;
   attributes: Record<string, string>;
@@ -24,3 +68,4 @@ export const officialGHL: { tracking: OfficialEmbed | null; chat: OfficialEmbed 
     setup: (container) => () => container.replaceChildren(),
   },
 };
+ */

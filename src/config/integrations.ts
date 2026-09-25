@@ -34,7 +34,7 @@ export function destinationUrl(destination: Destination, locale: Locale): string
   const url = integrations[destination];
   return url ?? `/${locale}/journey/${destination}`;
 }
-export function policyUrl(policy: "privacy" | "cookies" | "legal", locale: Locale) { return integrations[policy] ?? `/${locale}/legal/${policy}`; }
+export function policyUrl(policy: "privacy" | "cookies" | "legal", locale: Locale) { return `/${locale}/legal/${policy}`; }
 
 /** Attribution is passed through in memory, never persisted or sent to analytics. */
 export function attributedUrl(destination: string, locale: Locale, journey: Destination, search = ""): string {
