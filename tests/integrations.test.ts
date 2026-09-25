@@ -10,6 +10,15 @@ import { bookingConfig, bookingPath, bookingService, localizedPathname, thankYou
 import { bookingDictionaries } from "../src/i18n/booking-dictionaries.ts";
 import { thankYouDictionaries } from "../src/i18n/thank-you-dictionaries.ts";
 import { isBookingCompletion } from "../src/lib/booking-completion.ts";
+import { officialGHL } from "../src/config/official-ghl.ts";
+
+test("GHL chat retains the supplied official loader configuration", () => {
+  assert.equal(officialGHL.chat?.scriptUrl, "https://widgets.leadconnectorhq.com/loader.js");
+  assert.deepEqual(officialGHL.chat?.attributes, {
+    "data-resources-url": "https://widgets.leadconnectorhq.com/chat-widget/loader.js",
+    "data-widget-id": "6ab00f882251fa79529e1b8c",
+  });
+});
 
 test("only a completion message from the active calendar can finish booking", () => {
   const frame = {};

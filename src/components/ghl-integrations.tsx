@@ -1,4 +1,5 @@
 "use client";
+import Script from "next/script";
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import { integrations, validUrl } from "@/config/integrations";
@@ -46,6 +47,9 @@ export function GHLExternalTracking({ locale }: { locale: Locale }) {
 export function GHLChatWidget() {
   const consent = useConsent();
   const active = integrations.chatEnabled && consent?.functional === true;
-  const container = useOfficialEmbed(officialGHL.chat,active);
-  return <div ref={container} hidden={!active || !officialGHL.chat} className="ghl-widget-container" data-integration="ghl-chat"/>;
+  const chat = officialGHL.chat;
+  const scriptUrl = chat && validUrl(chat.scriptUrl);
+  return <div className="ghl-widget-container" data-integration="ghl-chat">
+    {active && chat && scriptUrl && <Script id="ghl-chat-widget-loader" src={scriptUrl} strategy="afterInteractive" {...chat.attributes}/>}
+  </div>;
 }
