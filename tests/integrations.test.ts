@@ -106,10 +106,12 @@ test("service destinations open the matching in-page panel and retain attributio
 });
 test("all six owner-supplied forms are uniquely mapped to their service and locale", () => {
   const expected = { repair: ["YiW7BRj6VuvmOp3lSIdV", "hCGWSaqbx2YxDIL1kdO9", "uRfhVEXgY37ASYDkJKoz"], installation: ["8ZaMIXDpSGg8plnOW88l", "J77jEaz7bCxYX30z1KQm", "T35PHLggbVht36xeta0w"] };
+  const heights = { repair: [1324, 1353, 1243], installation: [1319, 1289, 1289] };
   const ids = new Set<string>();
   for (const service of ["repair", "installation"] as const) locales.forEach((locale, index) => {
     const form = ghlForms[service][locale];
     assert.equal(form.id, expected[service][index]);
+    assert.equal(form.height, heights[service][index]);
     assert.equal(ghlFormUrl(service, locale), `https://api.leadconnectorhq.com/widget/form/${form.id}`);
     assert.ok(form.height > 1000);
     ids.add(form.id);

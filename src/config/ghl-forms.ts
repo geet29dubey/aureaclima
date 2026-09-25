@@ -6,14 +6,14 @@ export type GHLForm = { id: string; height: number; name: string };
 /** Exact public form IDs and heights supplied by the site owner. No private keys. */
 export const ghlForms: Record<ServiceType, Record<Locale, GHLForm>> = {
   repair: {
-    es: { id: "YiW7BRj6VuvmOp3lSIdV", height: 1440, name: "HVAC | ES | Solicitud Reparación" },
-    en: { id: "hCGWSaqbx2YxDIL1kdO9", height: 1416, name: "HVAC | EN | Request Repair - EN" },
-    it: { id: "uRfhVEXgY37ASYDkJKoz", height: 1440, name: "HVAC | IT | Repair Request - IT" },
+    es: { id: "YiW7BRj6VuvmOp3lSIdV", height: 1324, name: "HVAC | ES | Solicitud Reparación" },
+    en: { id: "hCGWSaqbx2YxDIL1kdO9", height: 1353, name: "HVAC | EN | Request Repair - EN" },
+    it: { id: "uRfhVEXgY37ASYDkJKoz", height: 1243, name: "HVAC | IT | Repair Request - IT" },
   },
   installation: {
-    es: { id: "8ZaMIXDpSGg8plnOW88l", height: 1641, name: "HVAC | ES | Solicitud Instalación" },
-    en: { id: "J77jEaz7bCxYX30z1KQm", height: 1638, name: "HVAC | EN | Request Installation - EN" },
-    it: { id: "T35PHLggbVht36xeta0w", height: 1641, name: "HVAC | IT | Request Installation - IT" },
+    es: { id: "8ZaMIXDpSGg8plnOW88l", height: 1319, name: "HVAC | ES | Solicitud Instalación" },
+    en: { id: "J77jEaz7bCxYX30z1KQm", height: 1289, name: "HVAC | EN | Request Installation - EN" },
+    it: { id: "T35PHLggbVht36xeta0w", height: 1289, name: "HVAC | IT | Request Installation - IT" },
   },
 };
 export const ghlFormOrigin = "https://api.leadconnectorhq.com";
