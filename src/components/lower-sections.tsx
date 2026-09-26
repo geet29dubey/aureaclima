@@ -22,7 +22,7 @@ export function LowerSections({ locale, d }: { locale: Locale; d: Dictionary }) 
             <p className="business-copy">{d.business.text}</p>
           </div>
           <div className="business-actions">
-            <a href={integrations.businessContact} className="button button-gold">{d.business.build}</a>
+            <a href={integrations.businessContact[locale]} className="button button-gold">{d.business.build}</a>
             <a href={integrations.contact} className="button button-light-outline">{d.business.explore}</a>
           </div>
           <span className="business-ring ring-one" aria-hidden="true"/>

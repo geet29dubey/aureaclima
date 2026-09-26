@@ -18,6 +18,8 @@ await Promise.all(paths.map(async path=>{
   assert.ok(html.includes('content="noindex, nofollow"'),`robots: ${path}`);
   assert.ok(html.includes(`rel="canonical" href="https://aureaclima.rooklyn.co${canonicalPath}"`),`canonical: ${path}`);
   assert.ok(!html.includes('application/ld+json'),`no misleading structured data: ${path}`);
+  assert.ok(!html.includes('https://clima.rooklyn.co/#contact'),`obsolete Rooklyn contact anchor: ${path}`);
+  if(path === `/${locale}`) assert.ok(html.includes(`href="https://clima.rooklyn.co/${locale}/"`),`localized Rooklyn business CTA: ${path}`);
   for (const match of html.matchAll(/<script\b[^>]*src="(https:[^"]+)"/g)) {
     assert.equal(match[1], "https://link.msgsndr.com/js/form_embed.js", `only the official GHL embed script: ${path}`);
   }
@@ -27,7 +29,7 @@ await Promise.all(paths.map(async path=>{
     if(href.startsWith("/")) {
       const url=new URL(href,base); links.add(url.pathname);
       if(url.hash && url.pathname === path) assert.ok(html.includes(`id="${url.hash.slice(1)}"`),`anchor: ${href}`);
-    } else assert.ok(href.startsWith("https://clima.rooklyn.co/") || href === "https://rooklyn.co" || href === "https://clima.rooklyn.co/#contact",`central external URL: ${href}`);
+    } else assert.ok(href.startsWith("https://clima.rooklyn.co/") || href === "https://rooklyn.co",`central external URL: ${href}`);
   }
 }));
 await Promise.all([...links].map(async path=>assert.equal((await fetch(`${base}${path}`)).status,200,`link: ${path}`)));

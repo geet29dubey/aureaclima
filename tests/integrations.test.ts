@@ -29,10 +29,9 @@ test("footer policies have complete localized legal documents", () => {
 
 test("GHL chat retains the supplied official loader configuration", () => {
   assert.equal(officialGHL.chat?.scriptUrl, "https://widgets.leadconnectorhq.com/loader.js");
-  assert.deepEqual(officialGHL.chat?.attributes, {
-    "data-resources-url": "https://widgets.leadconnectorhq.com/chat-widget/loader.js",
-    "data-widget-id": "6ab00f882251fa79529e1b8c",
-  });
+  assert.equal(officialGHL.chat?.resourcesUrl, "https://widgets.leadconnectorhq.com/chat-widget/loader.js");
+  assert.equal(officialGHL.chat?.widgetId, "6ab00f882251fa79529e1b8c");
+  assert.equal(officialGHL.chat?.locationId, "LBbKDQqDTzMCfsxZ52XI");
 });
 
 test("only a completion message from the active calendar can finish booking", () => {
