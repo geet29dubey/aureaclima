@@ -49,13 +49,14 @@ export function GHLChatWidget() {
   const scriptUrl = chat && validUrl(chat.scriptUrl);
   const resourcesUrl = chat && validUrl(chat.resourcesUrl);
   if (!integrations.chatEnabled || !chat || !scriptUrl || !resourcesUrl) return null;
-  return <>
-    <div data-chat-widget="" data-widget-id={chat.widgetId} data-location-id={chat.locationId}/>
-    <Script
+  // Mounted only by the shared root layout. Script deduplicates by this ID/source
+  // across effect replay, rerenders and client-side locale/page navigation.
+  return <Script
+      id="ghl-chat-widget-loader"
       src={scriptUrl}
       strategy="afterInteractive"
       data-resources-url={resourcesUrl}
       data-widget-id={chat.widgetId}
-    />
-  </>;
+      data-location-id={chat.locationId}
+    />;
 }
