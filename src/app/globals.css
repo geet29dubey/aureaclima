@@ -30,7 +30,7 @@
 .business-copy{color:#d0dce0}.business-actions{flex-wrap:wrap}
 .cookie-banner{max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}
 .cookie-buttons .button{min-height:44px}
-@media(max-width:1280px){
+@media(max-width:1440px){
   .desktop-nav{display:none}.mobile-menu{display:block}.desktop-language{display:block}
   .site-header{position:relative;z-index:40}
   .mobile-menu nav{position:absolute;top:100%;left:0;right:0;padding:18px 28px;background:#fff;box-shadow:0 20px 20px #0b253316;border-top:1px solid var(--line);z-index:40;display:flex;flex-direction:column;gap:10px;max-height:calc(100dvh - 145px);overflow-y:auto;overscroll-behavior:contain}
@@ -115,9 +115,9 @@
 .information-panel{max-width:800px}
 .section-heading.centered>p:not(.eyebrow){max-width:800px;margin-inline:auto}
 .business-copy{max-width:800px}
-@media(min-width:1281px){
+@media(min-width:1441px){
   .header-inner{max-width:1600px}
-  .desktop-nav{gap:clamp(28px,2.5vw,42px);font-size:16px}
+  .desktop-nav{gap:clamp(14px,1.3vw,22px);font-size:14px}
   .desktop-nav>a,.desktop-nav .services-dropdown-toggle{min-height:44px;display:inline-flex;align-items:center}
   .header-actions{gap:16px}
   .desktop-language .language-select{font-size:15px}

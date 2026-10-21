@@ -4,7 +4,7 @@ export function isLocale(value: string): value is Locale { return locales.includ
 export const languageNames = { es: "Español", en: "English", it: "Italiano" };
 
 const es = {
-  nav: { home: "Inicio", services: "Servicios", how: "Cómo funciona", faq: "Preguntas frecuentes", cta: "Solicitar servicio", contact: "Contactar con Rooklyn", language: "Idioma", menu: "Abrir menú", close: "Cerrar", skip: "Saltar al contenido" },
+  nav: { home: "Inicio", services: "Servicios", products: "Productos", how: "Cómo funciona", faq: "Preguntas frecuentes", cta: "Solicitar servicio", contact: "Contactar con Rooklyn", language: "Idioma", menu: "Abrir menú", close: "Cerrar", skip: "Saltar al contenido" },
   banner: "Estás explorando una demo interactiva de Rooklyn.", bannerCta: "Quiero este sistema para mi empresa",
   notice: "Demo interactiva creada por Rooklyn. Áurea Clima no presta servicios reales de climatización.",
   hero: { eyebrow: "Climatización sencilla y bien organizada", headline: "Confort en casa,", accent: "sin esperas innecesarias.", text: "Cuéntanos si necesitas una reparación o estás planificando una nueva instalación. Te guiaremos directamente al proceso adecuado.", repair: "Solicitar reparación", installation: "Solicitar instalación", micro: ["Proceso claro", "Reserva online", "Confirmación automática"], imageAlt: "Salón luminoso de estilo mediterráneo con un equipo de aire acondicionado en la pared y un sofá de lino claro.", imageLabel: "Tu hogar, a tu temperatura.", imageSub: "El confort empieza con un primer paso.", imageTag: "Pensado para tu hogar" },
@@ -22,7 +22,7 @@ const es = {
 };
 export type Dictionary = typeof es;
 const en: Dictionary = {
-  nav: { home: "Home", services: "Services", how: "How it works", faq: "FAQs", cta: "Request Service", contact: "Contact Rooklyn", language: "Language", menu: "Open menu", close: "Close", skip: "Skip to content" },
+  nav: { home: "Home", services: "Services", products: "Products", how: "How it works", faq: "FAQs", cta: "Request Service", contact: "Contact Rooklyn", language: "Language", menu: "Open menu", close: "Close", skip: "Skip to content" },
   banner: "You are exploring an interactive Rooklyn demo.", bannerCta: "I want this system for my business",
   notice: "Interactive demonstration created by Rooklyn. Áurea Clima does not provide real HVAC services.",
   hero: { eyebrow: "Simple, organised climate-control service", headline: "Home comfort,", accent: "without unnecessary waiting.", text: "Tell us whether you need a repair or are planning a new installation. We will guide you directly to the appropriate process.", repair: "Request a repair", installation: "Request an installation", micro: ["Clear process", "Online booking", "Automatic confirmation"], imageAlt: "Sunlit Mediterranean living room with a wall-mounted air conditioner and a light linen sofa.", imageLabel: "Your home. Your comfort.", imageSub: "Comfort starts with a first step.", imageTag: "Designed around your home" },
@@ -39,7 +39,7 @@ const en: Dictionary = {
   error: { title: "We couldn’t load this page.", text: "Try again or return home to continue exploring the demo.", retry: "Try again", missing: "This page is not available." }
 };
 const it: Dictionary = {
-  nav: { home: "Home", services: "Servizi", how: "Come funziona", faq: "Domande frequenti", cta: "Richiedi un servizio", contact: "Contatta Rooklyn", language: "Lingua", menu: "Apri menu", close: "Chiudi", skip: "Vai al contenuto" },
+  nav: { home: "Home", services: "Servizi", products: "Prodotti", how: "Come funziona", faq: "Domande frequenti", cta: "Richiedi un servizio", contact: "Contatta Rooklyn", language: "Lingua", menu: "Apri menu", close: "Chiudi", skip: "Vai al contenuto" },
   banner: "Stai esplorando una demo interattiva di Rooklyn.", bannerCta: "Voglio questo sistema per la mia azienda",
   notice: "Dimostrazione interattiva creata da Rooklyn. Áurea Clima non fornisce servizi reali di climatizzazione.",
   hero: { eyebrow: "Un servizio di climatizzazione semplice e organizzato", headline: "Comfort in casa,", accent: "senza attese inutili.", text: "Dicci se hai bisogno di una riparazione o se stai pianificando una nuova installazione. Ti guideremo direttamente al percorso corretto.", repair: "Richiedi una riparazione", installation: "Richiedi un’installazione", micro: ["Processo chiaro", "Prenotazione online", "Conferma automatica"], imageAlt: "Soggiorno mediterraneo luminoso con un climatizzatore a parete e un divano in lino chiaro.", imageLabel: "La tua casa, il tuo comfort.", imageSub: "Il comfort inizia con un primo passo.", imageTag: "Pensato per la tua casa" },
