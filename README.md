@@ -98,7 +98,53 @@ Event delivery is intentionally dormant without the official adapter and analyti
 
 **Approval is still required before production publishing or any DNS change.**
 
-For Vercel: import this repository as a Next.js project, select pnpm, add verified public environment values, and use the standard `pnpm build` command. For another Node-compatible host: install with the lockfile, build, and run `pnpm start` behind HTTPS. The existing Vinext/Cloudflare scaffold and deployment scripts are preserved. Validate that deployment path separately before release, including image optimisation and redirects.
+### Cloudflare Workers
+
+In the Worker's **Settings → Build**, use these commands from the repository root:
+
+| Setting | Command |
+| --- | --- |
+| Build command | `pnpm run build:vinext` |
+| Deploy command | `pnpm run deploy:cloudflare` |
+
+The deploy command expands to `wrangler deploy --config dist/server/wrangler.json`.
+The existing `deploy:vinext` script remains available for the separate build-and-deploy
+workflow with experimental CDN warming.
+
+`pnpm build` runs `next build` and produces `.next/`, which is for the Node/Next.js
+hosting path. The Cloudflare path needs the Vinext/Vite build to generate
+`dist/server/index.js`, `dist/server/wrangler.json` and `dist/client/`.
+The root `wrangler.jsonc` is the Vite plugin's input configuration. Its
+`vinext/server/fetch-handler` entry is resolved by Vite; it is not a generated
+file that a standalone Wrangler deploy can open from the source tree.
+
+If deployment reports `The entry-point file at "vinext/server/fetch-handler" was
+not found`, check both dashboard commands above. A skipped build, a Next.js build,
+or explicitly deploying the root config can leave Wrangler reading the source
+entry instead of the generated Worker. Save the settings and retry the build.
+Keep `dist/` ignored; generate it in the Cloudflare build job.
+
+Validate locally without publishing:
+
+```sh
+pnpm run build:vinext
+pnpm run check:cloudflare
+```
+
+Validation on 2026-10-21: the Vinext build and Wrangler dry run against the generated
+config both passed. The generated config uses `main: "index.js"` and
+`assets.directory: "../client"`. Vinext reports six pre-render errors for the
+existing legacy journey redirects (`RSC handler returned 307`); it completes the
+build and leaves those redirects to runtime. Its Node-based prerender pass also
+warns that the Cloudflare Images binding is unavailable there; the generated
+Worker retains the configured `IMAGES` binding. No production deployment was run.
+
+This input/output config distinction is documented in the
+[Cloudflare Vite deployment guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/react/).
+
+### Node / Next.js hosting
+
+For Vercel: import this repository as a Next.js project, select pnpm, add verified public environment values, and use the standard `pnpm build` command. For another Node-compatible host: install with the lockfile, build, and run `pnpm start` behind HTTPS.
 
 Do not use a simple static file server for `.next`. Runtime features include image optimisation, headers and the preference-aware root redirect. Most content is still pre-rendered.
 
